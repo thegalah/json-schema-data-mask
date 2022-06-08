@@ -1,8 +1,8 @@
 {
-    "name": "typescript-node-service",
+    "name": "jsonschema-mask",
     "version": "1.0.0",
-    "author": "Matthew Duong <matt@timeweave.com.au>",
-    "license": "UNLICENSED",
+    "author": "Matthew Duong <matt@zeal.com>",
+    "license": "mit",
     "dependencies": {
         "typescript": "^4.6.4"
     },
