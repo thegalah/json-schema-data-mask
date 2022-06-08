@@ -13,11 +13,9 @@
         "prettier": "prettier --write \"{src,web}/**/*.{js,jsx,ts,tsx}\" \"*.{js,json,md,yml,yaml}\""
     },
     "devDependencies": {
-        "@types/jest": "^27.5.0",
-        "@types/node": "^17.0.41",
+        "@types/jest": "^28.1.1",
         "depcheck": "^1.4.3",
         "jest": "^28.1.0",
-        "jest-environment-node": "^28.1.1",
         "prettier": "^2.6.2",
         "ts-jest": "^28.0.2"
     },
