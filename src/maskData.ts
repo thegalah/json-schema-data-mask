@@ -8,6 +8,11 @@ export const maskData = (jsonSchema: Schema, data: unknown, options: IMaskOption
     const validate = ajv.compile(jsonSchema);
     const valid = validate(data);
     if (!valid) {
-        console.log(validate.errors);
+        const calculator = new DataMaskCalculator(data);
+        validate.errors?.forEach((error) => {
+            const { params } = error;
+            console.error(error);
+        });
     }
+    return data;
 };
