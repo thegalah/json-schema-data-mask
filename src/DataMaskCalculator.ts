@@ -1,6 +1,8 @@
 import { ErrorObject } from "ajv";
 
-export interface IMaskOptions {}
+export interface IMaskOptions {
+    readonly shouldMaskTypeErrors?: boolean;
+}
 
 enum ValidMaskErrorOperations {
     AdditionalProperties = "additionalProperties",
@@ -29,12 +31,18 @@ export class DataMaskCalculator {
     };
 
     private handleAdditionalProperty = (params: Record<"additionalProperty", string>) => {
-        const { [params.additionalProperty]: _, ...result } = this.data as any;
-        this.data = result;
+        this.maskProperty(params.additionalProperty);
     };
 
-    private handleTypeError = (params: Record<"additionalProperty", string>) => {
-        const { [params.additionalProperty]: _, ...result } = this.data as any;
+    private handleTypeError = (params: Record<"type", string>) => {
+        const shouldMaskTypeErrors = this?.options?.shouldMaskTypeErrors ?? true;
+        if (shouldMaskTypeErrors) {
+            this.maskProperty(params.type);
+        }
+    };
+
+    private maskProperty = (property: string) => {
+        const { [property]: _, ...result } = this.data as any;
         this.data = result;
     };
 }
