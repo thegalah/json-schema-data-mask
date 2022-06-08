@@ -1,7 +1,7 @@
 {
     "name": "jsonschema-mask",
     "version": "0.0.1",
-    "author": "Matthew Duong <matt@zeal.com>",
+    "author": "Matthew Duong <thegalah@gmail.com>",
     "license": "MIT",
     "dependencies": {
         "typescript": "^4.7.3"
