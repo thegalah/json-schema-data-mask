@@ -18,14 +18,14 @@ export class DataMaskCalculator {
     public constructor(private data: object, private readonly options: IMaskOptions) {}
 
     public HandleValidationError = (error: ErrorObject) => {
-        const { keyword, params } = error;
+        const { keyword, params, instancePath } = error;
         console.log(error);
         switch (keyword) {
             case ValidMaskErrorOperations.AdditionalProperties:
                 this.handleAdditionalProperty(params);
                 break;
             case ValidMaskErrorOperations.TypeError:
-                this.handleTypeError(params);
+                this.handleTypeError(instancePath);
                 break;
             default:
                 throw new Error(`Unhandled mask operation: ${JSON.stringify(error)}`);
@@ -36,10 +36,10 @@ export class DataMaskCalculator {
         this.maskProperty(params.additionalProperty);
     };
 
-    private handleTypeError = (params: Record<"type", string>) => {
+    private handleTypeError = (pointer: string) => {
         const shouldMaskTypeErrors = this?.options?.shouldMaskTypeErrors ?? true;
         if (shouldMaskTypeErrors) {
-            // this.maskPropertyFromJSONPointer(params.type);
+            this.maskPropertyFromJSONPointer(pointer);
         }
     };
 
