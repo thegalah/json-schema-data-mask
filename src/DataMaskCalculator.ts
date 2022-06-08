@@ -18,7 +18,7 @@ export class DataMaskCalculator {
                 this.removeAdditionalProperty(params);
                 break;
             default:
-                throw new Error("Unhandled mask operation");
+                throw new Error(`Unhandled mask operation: ${JSON.stringify(error)}`);
         }
     };
 
