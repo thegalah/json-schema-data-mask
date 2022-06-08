@@ -59,4 +59,28 @@ describe("maskData", () => {
         const expected = { foo: 123 };
         expect(result).toStrictEqual(expected);
     });
+
+    test("it should be able to mask a nested property", () => {
+        const schema = {
+            type: "object",
+            properties: {
+                foo: {
+                    type: "object",
+                    properties: {
+                        bar: {
+                            type: "string",
+                        },
+                    },
+                    required: ["bar"],
+                    additionalProperties: false,
+                },
+            },
+            required: ["foo"],
+            additionalProperties: false,
+        };
+        const data = { foo: {} };
+        const result = maskData(schema, data);
+        const expected = { foo: 123 };
+        expect(result).toStrictEqual(expected);
+    });
 });
