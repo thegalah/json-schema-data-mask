@@ -78,9 +78,11 @@ describe("maskData", () => {
             required: ["foo"],
             additionalProperties: false,
         };
+        const mockCallback = jest.fn(() => null);
         const data = { foo: {} };
-        const result = maskData(schema, data);
-        const expected = { foo: 123 };
+        const result = maskData(schema, data, { onMissingPropertyError: mockCallback });
+        const expected = { foo: {} };
         expect(result).toStrictEqual(expected);
+        expect(mockCallback).toBeCalledTimes(1);
     });
 });

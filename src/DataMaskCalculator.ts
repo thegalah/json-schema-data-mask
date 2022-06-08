@@ -31,7 +31,7 @@ export class DataMaskCalculator {
                 break;
 
             case ValidMaskErrorOperations.Required:
-                this.handleTypeError(instancePath);
+                this.handleRequiredError(error);
                 break;
             default:
                 throw new Error(`Unhandled mask operation: ${JSON.stringify(error)}`);

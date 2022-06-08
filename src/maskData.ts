@@ -11,6 +11,7 @@ export const maskData = (jsonSchema: Schema, data: unknown, options: IMaskOption
     const valid = validate(data);
     if (!valid) {
         const calculator = new DataMaskCalculator(data, options);
+        console.log(validate.errors);
         validate.errors?.forEach((error) => {
             calculator.HandleValidationError(error);
         });
