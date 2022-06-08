@@ -1,1 +1,1 @@
-console.log("Hello world");
+export const maskData = (jsonSchema, data: unknown) => {};
