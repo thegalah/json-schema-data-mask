@@ -3,11 +3,13 @@ import jsonpointer from "jsonpointer";
 
 export interface IMaskOptions {
     readonly shouldMaskTypeErrors?: boolean;
+    readonly onMissingPropertyError?: (error: ErrorObject) => void;
 }
 
 enum ValidMaskErrorOperations {
     AdditionalProperties = "additionalProperties",
     TypeError = "type",
+    Required = "required",
 }
 
 export class DataMaskCalculator {
@@ -22,9 +24,13 @@ export class DataMaskCalculator {
         console.log(error);
         switch (keyword) {
             case ValidMaskErrorOperations.AdditionalProperties:
-                this.handleAdditionalProperty(params);
+                this.handleAdditionalPropertyError(params);
                 break;
             case ValidMaskErrorOperations.TypeError:
+                this.handleTypeError(instancePath);
+                break;
+
+            case ValidMaskErrorOperations.Required:
                 this.handleTypeError(instancePath);
                 break;
             default:
@@ -32,7 +38,12 @@ export class DataMaskCalculator {
         }
     };
 
-    private handleAdditionalProperty = (params: Record<"additionalProperty", string>) => {
+    private handleRequiredError = (error: ErrorObject) => {
+        const errorCallbackFn = this.options?.onMissingPropertyError;
+        errorCallbackFn?.(error);
+    };
+
+    private handleAdditionalPropertyError = (params: Record<"additionalProperty", string>) => {
         this.maskProperty(params.additionalProperty);
     };
 
