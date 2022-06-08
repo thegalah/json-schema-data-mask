@@ -39,7 +39,7 @@ export class DataMaskCalculator {
     private handleTypeError = (params: Record<"type", string>) => {
         const shouldMaskTypeErrors = this?.options?.shouldMaskTypeErrors ?? true;
         if (shouldMaskTypeErrors) {
-            this.maskProperty(params.type);
+            // this.maskPropertyFromJSONPointer(params.type);
         }
     };
 
@@ -48,8 +48,7 @@ export class DataMaskCalculator {
         this.data = result;
     };
 
-    private maskPropertyFromJSONPointer = (jsonPointer: string) => {
-        const pointer = jsonpointer.compile(jsonPointer);
-        pointer.set(this.data, undefined);
+    private maskPropertyFromJSONPointer = (pointer: string) => {
+        jsonpointer.set(this.data, pointer, undefined);
     };
 }
