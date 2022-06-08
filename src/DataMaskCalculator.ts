@@ -12,11 +12,7 @@ export class DataMaskCalculator {
         return this.data;
     }
 
-    private data: object;
-
-    public constructor(rawData: object, private readonly options: IMaskOptions) {
-        this.data = structuredClone(rawData);
-    }
+    public constructor(private data: object, private readonly options: IMaskOptions) {}
 
     public HandleValidationError = (error: ErrorObject) => {
         const { keyword, params } = error;
