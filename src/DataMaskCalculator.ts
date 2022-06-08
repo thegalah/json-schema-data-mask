@@ -12,7 +12,11 @@ export class DataMaskCalculator {
         return this.data;
     }
 
-    public constructor(private data: object, private readonly options: IMaskOptions) {}
+    private data: object;
+
+    public constructor(private rawData: object, private readonly options: IMaskOptions) {
+        this.data = rawData;
+    }
 
     public HandleValidationError = (error: ErrorObject) => {
         const { keyword, params } = error;
