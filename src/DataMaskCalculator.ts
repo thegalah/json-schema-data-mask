@@ -18,6 +18,7 @@ export class DataMaskCalculator {
 
     public HandleValidationError = (error: ErrorObject) => {
         const { keyword, params } = error;
+        console.log(error);
         switch (keyword) {
             case ValidMaskErrorOperations.AdditionalProperties:
                 this.handleAdditionalProperty(params);
@@ -38,7 +39,7 @@ export class DataMaskCalculator {
         const shouldMaskTypeErrors = this?.options?.shouldMaskTypeErrors ?? true;
         console.log(this.options);
         console.log(shouldMaskTypeErrors);
-        console.log();
+        console.log(params);
         if (shouldMaskTypeErrors) {
             this.maskProperty(params.type);
         }

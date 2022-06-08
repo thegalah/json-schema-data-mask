@@ -20,6 +20,7 @@
         "ts-jest": "^28.0.2"
     },
     "peerDependencies": {
-        "ajv": "^8.11.0"
+        "ajv": "^8.11.0",
+        "jsonpointer": "^5.0.0"
     }
 }
