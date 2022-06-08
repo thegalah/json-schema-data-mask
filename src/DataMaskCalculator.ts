@@ -14,7 +14,7 @@ export class DataMaskCalculator {
 
     private data: object;
 
-    public constructor(private rawData: object, private readonly options: IMaskOptions) {
+    public constructor(rawData: object, private readonly options: IMaskOptions) {
         this.data = structuredClone(rawData);
     }
 
