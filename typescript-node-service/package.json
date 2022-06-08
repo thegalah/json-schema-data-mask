@@ -1,0 +1,22 @@
+{
+    "name": "typescript-node-service",
+    "version": "1.0.0",
+    "author": "Matthew Duong <matt@timeweave.com.au>",
+    "license": "UNLICENSED",
+    "dependencies": {
+        "typescript": "^4.6.4"
+    },
+    "scripts": {
+        "check-dependencies": "depcheck",
+        "start": "tsc && node dist/Service.js",
+        "test": "jest",
+        "prettier": "prettier --write \"{src,web}/**/*.{js,jsx,ts,tsx}\" \"*.{js,json,md,yml,yaml}\""
+    },
+    "devDependencies": {
+        "@types/jest": "^27.5.0",
+        "depcheck": "^1.4.3",
+        "jest": "^28.1.0",
+        "prettier": "^2.6.2",
+        "ts-jest": "^28.0.2"
+    }
+}
