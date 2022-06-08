@@ -1,4 +1,5 @@
 import { ErrorObject } from "ajv";
+import jsonpointer from "jsonpointer";
 
 export interface IMaskOptions {
     readonly shouldMaskTypeErrors?: boolean;
@@ -37,9 +38,6 @@ export class DataMaskCalculator {
 
     private handleTypeError = (params: Record<"type", string>) => {
         const shouldMaskTypeErrors = this?.options?.shouldMaskTypeErrors ?? true;
-        console.log(this.options);
-        console.log(shouldMaskTypeErrors);
-        console.log(params);
         if (shouldMaskTypeErrors) {
             this.maskProperty(params.type);
         }
@@ -48,5 +46,10 @@ export class DataMaskCalculator {
     private maskProperty = (property: string) => {
         const { [property]: _, ...result } = this.data as any;
         this.data = result;
+    };
+
+    private maskPropertyFromJSONPointer = (jsonPointer: string) => {
+        const pointer = jsonpointer.compile(jsonPointer);
+        pointer.set(this.data, undefined);
     };
 }
