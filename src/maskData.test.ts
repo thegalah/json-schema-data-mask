@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jest-environment-node
+ **/
+
 import { maskData } from "./maskData";
 
 describe("maskData", () => {
