@@ -36,6 +36,9 @@ export class DataMaskCalculator {
 
     private handleTypeError = (params: Record<"type", string>) => {
         const shouldMaskTypeErrors = this?.options?.shouldMaskTypeErrors ?? true;
+        console.log(this.options);
+        console.log(shouldMaskTypeErrors);
+        console.log();
         if (shouldMaskTypeErrors) {
             this.maskProperty(params.type);
         }

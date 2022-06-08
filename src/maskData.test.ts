@@ -39,7 +39,7 @@ describe("maskData", () => {
             required: ["foo"],
             additionalProperties: false,
         };
-        const data = { foo: "123" };
+        const data = { foo: 123 };
         const result = maskData(schema, data, { shouldMaskTypeErrors: false });
         const expected = {};
         expect(result).toStrictEqual(expected);
@@ -54,9 +54,9 @@ describe("maskData", () => {
             required: ["foo"],
             additionalProperties: false,
         };
-        const data = { foo: "123" };
+        const data = { foo: 123 };
         const result = maskData(schema, data, { shouldMaskTypeErrors: false });
-        const expected = { foo: "123" };
+        const expected = { foo: 123 };
         expect(result).toStrictEqual(expected);
     });
 });
