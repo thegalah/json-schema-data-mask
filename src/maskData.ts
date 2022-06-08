@@ -1,9 +1,7 @@
 import Ajv, { Schema } from "ajv";
-import { DataMaskCalculator } from "./DataMaskCalculator";
+import { DataMaskCalculator, IMaskOptions } from "./DataMaskCalculator";
 
 const ajv = new Ajv({ allErrors: true });
-
-interface IMaskOptions {}
 
 export const maskData = (jsonSchema: Schema, data: unknown, options: IMaskOptions = {}) => {
     if (typeof data !== "object") {
@@ -12,7 +10,7 @@ export const maskData = (jsonSchema: Schema, data: unknown, options: IMaskOption
     const validate = ajv.compile(jsonSchema);
     const valid = validate(data);
     if (!valid) {
-        const calculator = new DataMaskCalculator(data);
+        const calculator = new DataMaskCalculator(data, options);
         validate.errors?.forEach((error) => {
             calculator.HandleValidationError(error);
         });
