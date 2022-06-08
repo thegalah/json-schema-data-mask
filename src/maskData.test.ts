@@ -1,7 +1,7 @@
 import { maskData } from "./maskData";
 
-describe("Some test", () => {
-    test("it should be true", () => {
+describe("maskData", () => {
+    test("it should mask a single property", () => {
         const schema = {
             type: "object",
             properties: {
