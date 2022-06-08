@@ -110,4 +110,27 @@ describe("maskData", () => {
         const expected = { foo: { bar: "abc" } };
         expect(result).toStrictEqual(expected);
     });
+
+    test("it mask data for a sample real world use case", () => {
+        const schema = {
+            type: "object",
+            properties: {
+                username: {
+                    type: "string",
+                },
+            },
+            required: ["username"],
+            additionalProperties: false,
+        };
+        const data = {
+            username: "mock-username",
+            password: "mock-hash",
+            email: "mock-email",
+        };
+        const result = maskData(schema, data, {});
+        const expected = {
+            username: "mock-username",
+        };
+        expect(result).toStrictEqual(expected);
+    });
 });
