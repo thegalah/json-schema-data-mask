@@ -15,7 +15,7 @@ export class DataMaskCalculator {
     private data: object;
 
     public constructor(private rawData: object, private readonly options: IMaskOptions) {
-        this.data = rawData;
+        this.data = structuredClone(rawData);
     }
 
     public HandleValidationError = (error: ErrorObject) => {
