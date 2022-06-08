@@ -85,4 +85,29 @@ describe("maskData", () => {
         expect(result).toStrictEqual(expected);
         expect(mockCallback).toBeCalledTimes(1);
     });
+
+    test("it can mask a nested property", () => {
+        const schema = {
+            type: "object",
+            properties: {
+                foo: {
+                    type: "object",
+                    properties: {
+                        bar: {
+                            type: "string",
+                        },
+                    },
+                    required: ["bar"],
+                    additionalProperties: false,
+                },
+            },
+            required: ["foo"],
+            additionalProperties: false,
+        };
+        const mockCallback = jest.fn(() => null);
+        const data = { foo: { bar: "abc", car: 123 } };
+        const result = maskData(schema, data, { onMissingPropertyError: mockCallback });
+        const expected = { foo: { bar: "abc" } };
+        expect(result).toStrictEqual(expected);
+    });
 });

@@ -21,10 +21,9 @@ export class DataMaskCalculator {
 
     public HandleValidationError = (error: ErrorObject) => {
         const { keyword, params, instancePath } = error;
-        console.log(error);
         switch (keyword) {
             case ValidMaskErrorOperations.AdditionalProperties:
-                this.handleAdditionalPropertyError(params);
+                this.handleAdditionalPropertyError(instancePath, params);
                 break;
             case ValidMaskErrorOperations.TypeError:
                 this.handleTypeError(instancePath);
@@ -43,8 +42,8 @@ export class DataMaskCalculator {
         errorCallbackFn?.(error);
     };
 
-    private handleAdditionalPropertyError = (params: Record<"additionalProperty", string>) => {
-        this.maskProperty(params.additionalProperty);
+    private handleAdditionalPropertyError = (instancePath: string, params: Record<"additionalProperty", string>) => {
+        this.maskPropertyFromJSONPointer(`${instancePath}/${params.additionalProperty}`);
     };
 
     private handleTypeError = (pointer: string) => {
@@ -52,11 +51,6 @@ export class DataMaskCalculator {
         if (shouldMaskTypeErrors) {
             this.maskPropertyFromJSONPointer(pointer);
         }
-    };
-
-    private maskProperty = (property: string) => {
-        const { [property]: _, ...result } = this.data as any;
-        this.data = result;
     };
 
     private maskPropertyFromJSONPointer = (pointer: string) => {
