@@ -13,7 +13,9 @@
         "check-dependencies": "depcheck",
         "start": "tsc && node dist/Service.js",
         "test": "jest",
-        "prettier": "prettier --write \"{src,web}/**/*.{js,jsx,ts,tsx}\" \"*.{js,json,md,yml,yaml}\""
+        "prettier": "prettier --write \"{src,web}/**/*.{js,jsx,ts,tsx}\" \"*.{js,json,md,yml,yaml}\"",
+        "prepublish": "yarn build cp -r ./dist/* . && rm -rf ./dist",
+        "postpublish": "git clean -fd"
     },
     "devDependencies": {
         "@types/jest": "^28.1.1",
