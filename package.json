@@ -13,8 +13,7 @@
         "check-dependencies": "depcheck",
         "start": "tsc && node dist/Service.js",
         "test": "jest",
-        "prettier": "prettier --write \"{src,web}/**/*.{js,jsx,ts,tsx}\" \"*.{js,json,md,yml,yaml}\"",
-        "prepare": "install-peers"
+        "prettier": "prettier --write \"{src,web}/**/*.{js,jsx,ts,tsx}\" \"*.{js,json,md,yml,yaml}\""
     },
     "devDependencies": {
         "@types/jest": "^28.1.1",
