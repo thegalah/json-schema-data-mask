@@ -12,8 +12,6 @@ $ yarn add jsonschema-mask
 
 ## Usage
 
-Usage
-
 ```typescript
 import { maskData } from "jsonschema-mask";
 
@@ -41,4 +39,14 @@ data now has extra properties stripped
     username: "mock-username",
 };
 */
+```
+
+## Options
+
+```typescript
+export interface IMaskOptions {
+    readonly shouldMaskTypeErrors?: boolean; // default true
+    readonly onMissingProperty?: (error: ErrorObject) => void; // callback when a property is missing
+    readonly onAdditionalProperty?: (error: ErrorObject) => void; // callback when there is an additional property
+}
 ```
