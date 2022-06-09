@@ -1,6 +1,6 @@
 {
     "name": "jsonschema-mask",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "author": "Matthew Duong <thegalah@gmail.com>",
     "license": "MIT",
     "main": "dist/index.ts",
@@ -13,11 +13,14 @@
         "check-dependencies": "depcheck",
         "start": "tsc && node dist/Service.js",
         "test": "jest",
-        "prettier": "prettier --write \"{src,web}/**/*.{js,jsx,ts,tsx}\" \"*.{js,json,md,yml,yaml}\""
+        "prettier": "prettier --write \"{src,web}/**/*.{js,jsx,ts,tsx}\" \"*.{js,json,md,yml,yaml}\"",
+        "prepublish": "yarn build && cp -r ./dist/* . && rm -rf ./dist",
+        "postpublish": "git clean -fd"
     },
     "devDependencies": {
         "@types/jest": "^28.1.1",
         "depcheck": "^1.4.3",
+        "install-peers": "^1.0.4",
         "jest": "^28.1.0",
         "prettier": "^2.6.2",
         "ts-jest": "^28.0.2"
@@ -25,5 +28,8 @@
     "peerDependencies": {
         "ajv": "^8.11.0",
         "jsonpointer": "^5.0.0"
+    },
+    "directories": {
+        "lib": "dist"
     }
 }
