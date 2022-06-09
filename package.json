@@ -3,8 +3,8 @@
     "version": "0.0.3",
     "author": "Matthew Duong <thegalah@gmail.com>",
     "license": "MIT",
-    "main": "dist/maskData.ts",
-    "types": "dist/maskData.d.ts",
+    "main": "dist/index.ts",
+    "types": "dist/index.d.ts",
     "dependencies": {
         "typescript": "^4.7.3"
     },
