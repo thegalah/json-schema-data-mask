@@ -3,7 +3,8 @@ import jsonpointer from "jsonpointer";
 
 export interface IMaskOptions {
     readonly shouldMaskTypeErrors?: boolean;
-    readonly onMissingPropertyError?: (error: ErrorObject) => void;
+    readonly onMissingProperty?: (error: ErrorObject) => void;
+    readonly onAdditionalProperty?: (error: ErrorObject) => void;
 }
 
 enum ValidMaskErrorOperations {
@@ -38,7 +39,7 @@ export class DataMaskCalculator {
     };
 
     private handleRequiredError = (error: ErrorObject) => {
-        const errorCallbackFn = this.options?.onMissingPropertyError;
+        const errorCallbackFn = this.options?.onMissingProperty;
         errorCallbackFn?.(error);
     };
 
