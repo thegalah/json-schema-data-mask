@@ -1,6 +1,6 @@
 {
     "name": "jsonschema-mask",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "author": "Matthew Duong <thegalah@gmail.com>",
     "license": "MIT",
     "main": "dist/index.ts",
