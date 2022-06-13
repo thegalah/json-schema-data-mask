@@ -97,7 +97,22 @@ describe("maskData", () => {
         };
         const data = { foo: 123 };
         const mockCallback = jest.fn(() => null);
-        const result = maskData(schema, data, { onTypeError: mockCallback });
+        maskData(schema, data, { onTypeError: mockCallback });
+        expect(mockCallback).toBeCalledTimes(1);
+    });
+
+    test("it should call onAdditionalProperty callback function for additional properties", () => {
+        const schema = {
+            type: "object",
+            properties: {
+                foo: { type: "string" },
+            },
+            required: ["foo"],
+            additionalProperties: false,
+        };
+        const data = { foo: "somestring", additionalProperty: "some additional string" };
+        const mockCallback = jest.fn(() => null);
+        maskData(schema, data, { onAdditionalProperty: mockCallback });
         expect(mockCallback).toBeCalledTimes(1);
     });
 
