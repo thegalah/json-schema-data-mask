@@ -2,9 +2,13 @@ import { ErrorObject } from "ajv";
 import jsonpointer from "jsonpointer";
 
 export interface IMaskOptions {
+    /* Controls whether type errors are masked, default: true */
     readonly shouldMaskTypeErrors?: boolean;
+    /* Optional callback when there is a missing property */
     readonly onMissingProperty?: (error: ErrorObject) => void;
+    /* Optional callback when there is an additional property */
     readonly onAdditionalProperty?: (error: ErrorObject) => void;
+    /* Optional callback when there is a type error */
     readonly onTypeError?: (error: ErrorObject) => void;
 }
 
