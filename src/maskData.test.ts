@@ -60,7 +60,7 @@ describe("maskData", () => {
         expect(result).toStrictEqual(expected);
     });
 
-    test("it should call errorCallback function for missing properties if provided", () => {
+    test("it should call onMissingProperty callback function for missing properties if provided", () => {
         const schema = {
             type: "object",
             properties: {
@@ -86,6 +86,36 @@ describe("maskData", () => {
         expect(mockCallback).toBeCalledTimes(1);
     });
 
+    test("it should call onTypeError callback function for invalid property types", () => {
+        const schema = {
+            type: "object",
+            properties: {
+                foo: { type: "string" },
+            },
+            required: ["foo"],
+            additionalProperties: false,
+        };
+        const data = { foo: 123 };
+        const mockCallback = jest.fn(() => null);
+        maskData(schema, data, { onTypeError: mockCallback });
+        expect(mockCallback).toBeCalledTimes(1);
+    });
+
+    test("it should call onAdditionalProperty callback function for additional properties", () => {
+        const schema = {
+            type: "object",
+            properties: {
+                foo: { type: "string" },
+            },
+            required: ["foo"],
+            additionalProperties: false,
+        };
+        const data = { foo: "somestring", additionalProperty: "some additional string" };
+        const mockCallback = jest.fn(() => null);
+        maskData(schema, data, { onAdditionalProperty: mockCallback });
+        expect(mockCallback).toBeCalledTimes(1);
+    });
+
     test("it can mask a nested property", () => {
         const schema = {
             type: "object",
@@ -104,14 +134,13 @@ describe("maskData", () => {
             required: ["foo"],
             additionalProperties: false,
         };
-        const mockCallback = jest.fn(() => null);
         const data = { foo: { bar: "abc", car: 123 } };
-        const result = maskData(schema, data, { onMissingProperty: mockCallback });
+        const result = maskData(schema, data, {});
         const expected = { foo: { bar: "abc" } };
         expect(result).toStrictEqual(expected);
     });
 
-    test("it mask data for a sample real world use case", () => {
+    test("it masks data for a sample real world use case", () => {
         const schema = {
             type: "object",
             properties: {

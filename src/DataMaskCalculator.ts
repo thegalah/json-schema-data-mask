@@ -2,9 +2,14 @@ import { ErrorObject } from "ajv";
 import jsonpointer from "jsonpointer";
 
 export interface IMaskOptions {
+    /* Controls whether type errors are masked, default: true */
     readonly shouldMaskTypeErrors?: boolean;
+    /* Optional callback when there is a missing property */
     readonly onMissingProperty?: (error: ErrorObject) => void;
+    /* Optional callback when there is an additional property */
     readonly onAdditionalProperty?: (error: ErrorObject) => void;
+    /* Optional callback when there is a type error */
+    readonly onTypeError?: (error: ErrorObject) => void;
 }
 
 enum ValidMaskErrorOperations {
@@ -24,10 +29,10 @@ export class DataMaskCalculator {
         const { keyword, params, instancePath } = error;
         switch (keyword) {
             case ValidMaskErrorOperations.AdditionalProperties:
-                this.handleAdditionalPropertyError(instancePath, params);
+                this.handleAdditionalPropertyError(error);
                 break;
             case ValidMaskErrorOperations.TypeError:
-                this.handleTypeError(instancePath);
+                this.handleTypeError(error);
                 break;
 
             case ValidMaskErrorOperations.Required:
@@ -43,12 +48,18 @@ export class DataMaskCalculator {
         errorCallbackFn?.(error);
     };
 
-    private handleAdditionalPropertyError = (instancePath: string, params: Record<"additionalProperty", string>) => {
+    private handleAdditionalPropertyError = (error: ErrorObject) => {
+        const { instancePath, params } = error;
+        const errorCallbackFn = this.options?.onAdditionalProperty;
+        errorCallbackFn?.(error);
         this.maskPropertyFromJSONPointer(`${instancePath}/${params.additionalProperty}`);
     };
 
-    private handleTypeError = (pointer: string) => {
+    private handleTypeError = (error: ErrorObject) => {
+        const pointer = error.instancePath;
         const shouldMaskTypeErrors = this?.options?.shouldMaskTypeErrors ?? true;
+        const errorCallbackFn = this.options?.onTypeError;
+        errorCallbackFn?.(error);
         if (shouldMaskTypeErrors) {
             this.maskPropertyFromJSONPointer(pointer);
         }

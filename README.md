@@ -1,13 +1,13 @@
 # JSONSchema mask
 
-A lightweight library that takes in a JSON schema and a JSON object and ensures that extra properties are removed from the object. It requires two peer dependencies of [ajv](https://github.com/ajv-validator/ajv) and [jsonpointer](https://github.com/janl/node-jsonpointer)
+A well tested lightweight library that takes in a JSON schema and a JSON object and ensures that extra properties are removed from the object. It requires two peer dependencies of [ajv](https://github.com/ajv-validator/ajv) and [jsonpointer](https://github.com/janl/node-jsonpointer)
 
 ## Installation
 
 ```bash
-$ npm i jsonschema-mask
-$ # Or
-$ yarn add jsonschema-mask
+npm i jsonschema-mask
+# Or
+yarn add jsonschema-mask
 ```
 
 ## Usage
@@ -32,7 +32,9 @@ const rawData = {
     email: "mock-email",
 };
 
-const maskedData = maskData(schema, rawData);
+const maskOptions: IMaskOptions = {};
+
+const maskedData = maskData(schema, rawData, maskOptions);
 /*
 data now has extra properties stripped
 {
@@ -45,8 +47,13 @@ data now has extra properties stripped
 
 ```typescript
 export interface IMaskOptions {
-    readonly shouldMaskTypeErrors?: boolean; // default true
-    readonly onMissingProperty?: (error: ErrorObject) => void; // callback when a property is missing
-    readonly onAdditionalProperty?: (error: ErrorObject) => void; // callback when there is an additional property
+    /* Controls whether type errors are masked, default: true */
+    readonly shouldMaskTypeErrors?: boolean;
+    /* Optional callback when there is a missing property */
+    readonly onMissingProperty?: (error: ErrorObject) => void;
+    /* Optional callback when there is an additional property */
+    readonly onAdditionalProperty?: (error: ErrorObject) => void;
+    /* Optional callback when there is a type error */
+    readonly onTypeError?: (error: ErrorObject) => void;
 }
 ```
