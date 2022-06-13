@@ -5,6 +5,7 @@ export interface IMaskOptions {
     readonly shouldMaskTypeErrors?: boolean;
     readonly onMissingProperty?: (error: ErrorObject) => void;
     readonly onAdditionalProperty?: (error: ErrorObject) => void;
+    readonly onTypeError?: (error: ErrorObject) => void;
 }
 
 enum ValidMaskErrorOperations {
@@ -27,7 +28,7 @@ export class DataMaskCalculator {
                 this.handleAdditionalPropertyError(instancePath, params);
                 break;
             case ValidMaskErrorOperations.TypeError:
-                this.handleTypeError(instancePath);
+                this.handleTypeError(error);
                 break;
 
             case ValidMaskErrorOperations.Required:
@@ -47,8 +48,11 @@ export class DataMaskCalculator {
         this.maskPropertyFromJSONPointer(`${instancePath}/${params.additionalProperty}`);
     };
 
-    private handleTypeError = (pointer: string) => {
+    private handleTypeError = (error: ErrorObject) => {
+        const pointer = error.instancePath;
         const shouldMaskTypeErrors = this?.options?.shouldMaskTypeErrors ?? true;
+        const errorCallbackFn = this.options?.onTypeError;
+        errorCallbackFn?.(error);
         if (shouldMaskTypeErrors) {
             this.maskPropertyFromJSONPointer(pointer);
         }
