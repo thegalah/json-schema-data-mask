@@ -5,9 +5,9 @@ A lightweight library that takes in a JSON schema and a JSON object and ensures 
 ## Installation
 
 ```bash
-$ npm i jsonschema-mask
-$ # Or
-$ yarn add jsonschema-mask
+npm i jsonschema-mask
+# Or
+yarn add jsonschema-mask
 ```
 
 ## Usage
