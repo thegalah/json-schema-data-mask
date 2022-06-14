@@ -162,4 +162,24 @@ describe("maskData", () => {
         };
         expect(result).toStrictEqual(expected);
     });
+
+    test("it masks data for an invalid enum", () => {
+        const schema = {
+            type: "object",
+            properties: {
+                enum: {
+                    type: "string",
+                    enum: ["one", "two", "three"],
+                },
+            },
+            required: ["enum"],
+            additionalProperties: false,
+        };
+        const data = {
+            enum: "invalid-value",
+        };
+        const result = maskData(schema, data, {});
+        const expected = {};
+        expect(result).toStrictEqual(expected);
+    });
 });

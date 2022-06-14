@@ -16,6 +16,7 @@ enum ValidMaskErrorOperations {
     AdditionalProperties = "additionalProperties",
     TypeError = "type",
     Required = "required",
+    Enum = "enum",
 }
 
 export class DataMaskCalculator {
@@ -35,11 +36,15 @@ export class DataMaskCalculator {
                 this.handleTypeError(error);
                 break;
 
+            case ValidMaskErrorOperations.Enum:
+                this.handleTypeError(error);
+                break;
+
             case ValidMaskErrorOperations.Required:
                 this.handleRequiredError(error);
                 break;
             default:
-                throw new Error(`Unhandled mask operation: ${JSON.stringify(error)}`);
+                console.error(`Unhandled mask operation: ${JSON.stringify(error)}`);
         }
     };
 
