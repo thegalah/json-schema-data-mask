@@ -1,16 +1,22 @@
 import Ajv, { Schema } from "ajv";
 import { DataMaskCalculator, IMaskOptions } from "./DataMaskCalculator";
 
-const ajv = new Ajv({ allErrors: true });
+const validator = new Ajv({ allErrors: true });
 
-export const maskData = (jsonSchema: Schema, data: unknown, options: IMaskOptions = {}) => {
+type ObjectAssertion = (data: unknown) => asserts data is object;
+
+const assertObject: ObjectAssertion = (data: unknown): asserts data is object => {
     if (typeof data !== "object") {
         throw new Error("maskData only accepts data of type object");
     }
-    const validate = ajv.compile(jsonSchema);
-    const valid = validate(data);
-    if (!valid) {
-        const calculator = new DataMaskCalculator(data, options);
+};
+export const maskData = (jsonSchema: Schema, schemaKeyRef: string, data: unknown, options: IMaskOptions = {}) => {
+    const rawData = data;
+    assertObject(rawData);
+    const validate = validator.compile(jsonSchema);
+    validator.validate(schemaKeyRef, rawData);
+    if (validator.errors) {
+        const calculator = new DataMaskCalculator(data as object, options);
         validate.errors?.forEach((error) => {
             calculator.HandleValidationError(error);
         });
