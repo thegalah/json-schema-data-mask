@@ -34,7 +34,7 @@ const rawData = {
 
 const maskOptions: IMaskOptions = {};
 
-const maskedData = maskData(schema, rawData, maskOptions);
+const maskedData = maskData(schema, "#", rawData, maskOptions);
 /*
 data now has extra properties stripped
 {
