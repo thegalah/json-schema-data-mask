@@ -14,7 +14,11 @@ export const maskData = (jsonSchema: Schema, schemaKeyRef: string, data: unknown
     const rawData = data;
     assertObject(rawData);
     const validate = validator.compile(jsonSchema);
-    validator.validate(schemaKeyRef, rawData);
+    const schema = validator.getSchema(schemaKeyRef)?.schema.valueOf();
+    if (schema === undefined) {
+        throw new Error(`Could not find schema definition. Schema "${schemaKeyRef}" not found`);
+    }
+    validator.validate(schema, rawData);
     if (validator.errors) {
         const calculator = new DataMaskCalculator(data as object, options);
         validate.errors?.forEach((error) => {
