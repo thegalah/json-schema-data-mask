@@ -182,4 +182,24 @@ describe("maskData", () => {
         const expected = {};
         expect(result).toStrictEqual(expected);
     });
+
+    test("it masks data using a referenced schema", () => {
+        const schema = {
+            $schema: "http://json-schema.org/draft-07/schema#",
+            definitions: {
+                IEmptyDataMask: {
+                    type: "object",
+                    additionalProperties: false,
+                },
+            },
+        };
+        const data = {
+            enum: "invalid-value",
+            someProperty: "some-string",
+            asdasd: true,
+        };
+        const result = maskData(schema, "#", data, {});
+        const expected = { someProperty: "some-string" };
+        expect(result).toStrictEqual(expected);
+    });
 });
