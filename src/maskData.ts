@@ -13,17 +13,19 @@ const assertObject: ObjectAssertion = (data: unknown): asserts data is object =>
 export const maskData = (jsonSchema: Schema, schemaKeyRef: string, data: unknown, options: IMaskOptions = {}) => {
     const rawData = data;
     assertObject(rawData);
-    const validate = validator.compile(jsonSchema);
+    validator.compile(jsonSchema);
     const schema = validator.getSchema(schemaKeyRef)?.schema.valueOf();
     if (schema === undefined) {
         throw new Error(`Could not find schema definition. Schema "${schemaKeyRef}" not found`);
     }
+
     validator.validate(schema, rawData);
     if (validator.errors) {
-        const calculator = new DataMaskCalculator(data as object, options);
-        validate.errors?.forEach((error) => {
+        const calculator = new DataMaskCalculator(data as object, schemaKeyRef, options);
+        validator.errors?.forEach((error) => {
             calculator.HandleValidationError(error);
         });
+
         return calculator.Result;
     }
     return data;

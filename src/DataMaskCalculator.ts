@@ -24,7 +24,7 @@ export class DataMaskCalculator {
         return this.data;
     }
 
-    public constructor(private data: object, private readonly options: IMaskOptions) {}
+    public constructor(private data: object, private readonly schemaKeyRef: string, private readonly options: IMaskOptions) {}
 
     public HandleValidationError = (error: ErrorObject) => {
         const { keyword, params, instancePath } = error;
