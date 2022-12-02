@@ -11,7 +11,7 @@ describe("maskData", () => {
             additionalProperties: false,
         };
         const data = { foo: 123, bar: 456 };
-        const result = maskData(schema, data, {});
+        const result = maskData(schema, "#", data, {});
         const expected = { foo: 123 };
         expect(result).toStrictEqual(expected);
     });
@@ -26,7 +26,7 @@ describe("maskData", () => {
             additionalProperties: false,
         };
         const data = { foo: 123, nestedBar: { a: 456, b: 789 } };
-        const result = maskData(schema, data, {});
+        const result = maskData(schema, "#", data, {});
         const expected = { foo: 123 };
         expect(result).toStrictEqual(expected);
     });
@@ -40,7 +40,7 @@ describe("maskData", () => {
             additionalProperties: false,
         };
         const data = { foo: 123 };
-        const result = maskData(schema, data, {});
+        const result = maskData(schema, "#", data, {});
         const expected = {};
         expect(result).toStrictEqual(expected);
     });
@@ -55,7 +55,7 @@ describe("maskData", () => {
             additionalProperties: false,
         };
         const data = { foo: 123 };
-        const result = maskData(schema, data, { shouldMaskTypeErrors: false });
+        const result = maskData(schema, "#", data, { shouldMaskTypeErrors: false });
         const expected = { foo: 123 };
         expect(result).toStrictEqual(expected);
     });
@@ -80,7 +80,7 @@ describe("maskData", () => {
         };
         const mockCallback = jest.fn(() => null);
         const data = { foo: {} };
-        const result = maskData(schema, data, { onMissingProperty: mockCallback });
+        const result = maskData(schema, "#", data, { onMissingProperty: mockCallback });
         const expected = { foo: {} };
         expect(result).toStrictEqual(expected);
         expect(mockCallback).toBeCalledTimes(1);
@@ -97,7 +97,7 @@ describe("maskData", () => {
         };
         const data = { foo: 123 };
         const mockCallback = jest.fn(() => null);
-        maskData(schema, data, { onTypeError: mockCallback });
+        maskData(schema, "#", data, { onTypeError: mockCallback });
         expect(mockCallback).toBeCalledTimes(1);
     });
 
@@ -112,7 +112,7 @@ describe("maskData", () => {
         };
         const data = { foo: "somestring", additionalProperty: "some additional string" };
         const mockCallback = jest.fn(() => null);
-        maskData(schema, data, { onAdditionalProperty: mockCallback });
+        maskData(schema, "#", data, { onAdditionalProperty: mockCallback });
         expect(mockCallback).toBeCalledTimes(1);
     });
 
@@ -135,7 +135,7 @@ describe("maskData", () => {
             additionalProperties: false,
         };
         const data = { foo: { bar: "abc", car: 123 } };
-        const result = maskData(schema, data, {});
+        const result = maskData(schema, "#", data, {});
         const expected = { foo: { bar: "abc" } };
         expect(result).toStrictEqual(expected);
     });
@@ -156,7 +156,7 @@ describe("maskData", () => {
             password: "mock-hash",
             email: "mock-email",
         };
-        const result = maskData(schema, data, {});
+        const result = maskData(schema, "#", data, {});
         const expected = {
             username: "mock-username",
         };
@@ -178,8 +178,28 @@ describe("maskData", () => {
         const data = {
             enum: "invalid-value",
         };
-        const result = maskData(schema, data, {});
+        const result = maskData(schema, "#", data, {});
         const expected = {};
+        expect(result).toStrictEqual(expected);
+    });
+
+    test("it masks data using a referenced definition schema", () => {
+        const schema = {
+            $schema: "http://json-schema.org/draft-07/schema#",
+            definitions: {
+                ISampleSchema: {
+                    type: "object",
+                    properties: {
+                        foo: { type: "integer" },
+                    },
+                    required: ["foo"],
+                    additionalProperties: false,
+                },
+            },
+        };
+        const data = { foo: 123, bar: 456 };
+        const result = maskData(schema, "#/definitions/ISampleSchema", data, {});
+        const expected = { foo: 123 };
         expect(result).toStrictEqual(expected);
     });
 });
