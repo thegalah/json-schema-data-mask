@@ -1,3 +1,4 @@
+import Ajv from "ajv";
 import { maskData } from "./maskData";
 
 describe("maskData", () => {
@@ -11,7 +12,9 @@ describe("maskData", () => {
             additionalProperties: false,
         };
         const data = { foo: 123, bar: 456 };
-        const result = maskData(schema, "#", data, {});
+        const validator = new Ajv({ allErrors: true });
+        validator.compile(schema);
+        const result = maskData(validator, "#", data, {});
         const expected = { foo: 123 };
         expect(result).toStrictEqual(expected);
     });
@@ -26,7 +29,9 @@ describe("maskData", () => {
             additionalProperties: false,
         };
         const data = { foo: 123, nestedBar: { a: 456, b: 789 } };
-        const result = maskData(schema, "#", data, {});
+        const validator = new Ajv({ allErrors: true });
+        validator.compile(schema);
+        const result = maskData(validator, "#", data, {});
         const expected = { foo: 123 };
         expect(result).toStrictEqual(expected);
     });
@@ -40,7 +45,9 @@ describe("maskData", () => {
             additionalProperties: false,
         };
         const data = { foo: 123 };
-        const result = maskData(schema, "#", data, {});
+        const validator = new Ajv({ allErrors: true });
+        validator.compile(schema);
+        const result = maskData(validator, "#", data, {});
         const expected = {};
         expect(result).toStrictEqual(expected);
     });
@@ -55,7 +62,9 @@ describe("maskData", () => {
             additionalProperties: false,
         };
         const data = { foo: 123 };
-        const result = maskData(schema, "#", data, { shouldMaskTypeErrors: false });
+        const validator = new Ajv({ allErrors: true });
+        validator.compile(schema);
+        const result = maskData(validator, "#", data, { shouldMaskTypeErrors: false });
         const expected = { foo: 123 };
         expect(result).toStrictEqual(expected);
     });
@@ -80,7 +89,9 @@ describe("maskData", () => {
         };
         const mockCallback = jest.fn(() => null);
         const data = { foo: {} };
-        const result = maskData(schema, "#", data, { onMissingProperty: mockCallback });
+        const validator = new Ajv({ allErrors: true });
+        validator.compile(schema);
+        const result = maskData(validator, "#", data, { onMissingProperty: mockCallback });
         const expected = { foo: {} };
         expect(result).toStrictEqual(expected);
         expect(mockCallback).toBeCalledTimes(1);
@@ -97,7 +108,9 @@ describe("maskData", () => {
         };
         const data = { foo: 123 };
         const mockCallback = jest.fn(() => null);
-        maskData(schema, "#", data, { onTypeError: mockCallback });
+        const validator = new Ajv({ allErrors: true });
+        validator.compile(schema);
+        maskData(validator, "#", data, { onTypeError: mockCallback });
         expect(mockCallback).toBeCalledTimes(1);
     });
 
@@ -112,7 +125,9 @@ describe("maskData", () => {
         };
         const data = { foo: "somestring", additionalProperty: "some additional string" };
         const mockCallback = jest.fn(() => null);
-        maskData(schema, "#", data, { onAdditionalProperty: mockCallback });
+        const validator = new Ajv({ allErrors: true });
+        validator.compile(schema);
+        maskData(validator, "#", data, { onAdditionalProperty: mockCallback });
         expect(mockCallback).toBeCalledTimes(1);
     });
 
@@ -135,7 +150,9 @@ describe("maskData", () => {
             additionalProperties: false,
         };
         const data = { foo: { bar: "abc", car: 123 } };
-        const result = maskData(schema, "#", data, {});
+        const validator = new Ajv({ allErrors: true });
+        validator.compile(schema);
+        const result = maskData(validator, "#", data, {});
         const expected = { foo: { bar: "abc" } };
         expect(result).toStrictEqual(expected);
     });
@@ -156,7 +173,9 @@ describe("maskData", () => {
             password: "mock-hash",
             email: "mock-email",
         };
-        const result = maskData(schema, "#", data, {});
+        const validator = new Ajv({ allErrors: true });
+        validator.compile(schema);
+        const result = maskData(validator, "#", data, {});
         const expected = {
             username: "mock-username",
         };
@@ -178,7 +197,9 @@ describe("maskData", () => {
         const data = {
             enum: "invalid-value",
         };
-        const result = maskData(schema, "#", data, {});
+        const validator = new Ajv({ allErrors: true });
+        validator.compile(schema);
+        const result = maskData(validator, "#", data, {});
         const expected = {};
         expect(result).toStrictEqual(expected);
     });
@@ -198,8 +219,61 @@ describe("maskData", () => {
             },
         };
         const data = { foo: 123, bar: 456 };
-        const result = maskData(schema, "#/definitions/ISampleSchema", data, {});
+        const validator = new Ajv({ allErrors: true });
+        validator.compile(schema);
+        const result = maskData(validator, "#/definitions/ISampleSchema", data, {});
         const expected = { foo: 123 };
+        expect(result).toStrictEqual(expected);
+    });
+
+    test("it masks data using a referenced definition schema", () => {
+        const schema = {
+            $schema: "http://json-schema.org/draft-07/schema#",
+            definitions: {
+                IBasicTypesA: {
+                    type: "object",
+                    properties: {
+                        propertyA: {
+                            $ref: "#/definitions/IBaseType",
+                        },
+                        propertyB: {
+                            $ref: "#/definitions/IBaseType",
+                        },
+                    },
+                    required: ["propertyA", "propertyB"],
+                    additionalProperties: false,
+                },
+                IBaseType: {
+                    type: "object",
+                    properties: {
+                        someProperty: {
+                            type: "string",
+                        },
+                    },
+                    required: ["someProperty"],
+                    additionalProperties: false,
+                },
+                IBasicTypesB: {
+                    type: "object",
+                    properties: {
+                        propertyA: {
+                            $ref: "#/definitions/IBaseType",
+                        },
+                        propertyB: {
+                            $ref: "#/definitions/IBaseType",
+                        },
+                    },
+                    required: ["propertyA", "propertyB"],
+                    additionalProperties: false,
+                },
+            },
+        };
+        const data = { propertyA: { someProperty: "someprop", extraProperty: "extraprop" }, propertyB: { someProperty: "someprop" } };
+        const validator = new Ajv({ allErrors: true });
+        validator.compile(schema);
+        const result = maskData(validator, "#/definitions/IBasicTypesB", data, {});
+        const expected = { propertyA: { someProperty: "someprop" }, propertyB: { someProperty: "someprop" } };
+        console.log(result);
         expect(result).toStrictEqual(expected);
     });
 });
